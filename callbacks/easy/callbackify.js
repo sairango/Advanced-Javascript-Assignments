@@ -8,8 +8,18 @@
 // When the Promise rejects, the callback should be called with the error.
 
 
-function callbackify(fn) {
 
+function callbackify(fn) {
+    const returnfn = (...args) => {
+        const callback = args.pop();
+
+        fn(...args)
+            .then((data) => { return callback(null, data) })
+            .catch((err)=>{return callback(err)})
+        
+    }
+
+    return returnfn;
 }
 
 module.exports = callbackify;
